@@ -67,7 +67,7 @@ function App() {
   }
 
   useEffect(() => {
-    fetchData
+    fetchData()
   }, [])
 
   return (
@@ -234,7 +234,9 @@ function App() {
                           <h3>
                             {post.title}
                           </h3>
-                          <img src={post.image} alt="" />
+                          <img src={`http://localhost:3000/imgs/posts/${post.image}`} alt={post.title} />
+                          <img src={`/imgs/posts/${post.image}`} alt={post.title} />
+                          <img src={`/imgs/posts/${post.image}`} alt={post.title} />
                         </div>
                         {post.content}
                       </div>
