@@ -56,7 +56,7 @@ function App() {
     setFormData({ titolo: '', immagine: '', contenuto: '', categoria: '', tags: [], pubblicato: false })
   }
 
-  function fetchData(url = api_server + api_endpoint) {
+  function fetchData(url = "http://localhost:3001/posts") {
     fetch(url)
       .then(resp => resp.json())
       .then(data => {
@@ -121,7 +121,7 @@ function App() {
               />
             </div>
             {/* select */}
-            <div iv className="col-12">
+            <div className="col-12">
               <label className="input-group-text" htmlFor="inputGroupCategory">Categorie</label>
               <select
                 id='categoria'
