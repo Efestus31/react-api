@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 const api_server = 'http://localhost:3000'
@@ -14,6 +14,8 @@ function App() {
     tags: [],
     pubblicato: false
   })
+  const [postsData, setPostsData] = useState({})
+
   const [articoli, setArticoli] = useState([]);
   //handle title imput
   function handleTitle(e) {
@@ -54,6 +56,19 @@ function App() {
     setFormData({ titolo: '', immagine: '', contenuto: '', categoria: '', tags: [], pubblicato: false })
   }
 
+  function fetchData(url = api_server + api_endpoint) {
+    fetch(url)
+      .then(resp => resp.json())
+      .then(data => {
+        console.log(data);
+        setPostsData(data)
+
+      })
+  }
+
+  useEffect(() => {
+    fetchData
+  }, [])
 
   return (
     <>
@@ -192,7 +207,7 @@ function App() {
             <button type="submit">Aggiungi Articolo</button>
           </form>
 
-          <div className="mt-5">
+          {/*   <div className="mt-5">
             <h2>Articoli Inseriti:</h2>
             <ul className="list-group">
               {articoli.map((articolo, index) => (
@@ -206,8 +221,29 @@ function App() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
+          <section className='posts'>
+            <div className="container">
+              <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                {
+                  postsData.data ?
 
+                    postsData.data.map(post => (
+                      <div className="col" key={Date.now()}>
+                        <div className="card">
+                          <h3>
+                            {post.title}
+                          </h3>
+                          <img src={post.image} alt="" />
+                        </div>
+                        {post.content}
+                      </div>
+                    )) :
+                    <p>no data found</p>
+                }
+              </div>
+            </div>
+          </section>
         </div >
       </main >
     </>
