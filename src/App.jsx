@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
-const api_server = 'http://localhost:3000'
-const api_endpoint = '/posts'
+
 
 function App() {
 
@@ -14,6 +13,9 @@ function App() {
     tags: [],
     pubblicato: false
   })
+  const [newPost, setNewPost] = useState({})
+
+  //const [postsData, setPostsData
   const [postsData, setPostsData] = useState({})
 
   const [articoli, setArticoli] = useState([]);
@@ -50,11 +52,26 @@ function App() {
   //handle form submit
   function handleSubmit(e) {
     e.preventDefault()
-    console.log(formData);
-    setArticoli([...articoli, formData]);
+    // console.log(formData);
+    //setArticoli([...articoli, formData]);
     //reset of title after submit
-    setFormData({ titolo: '', immagine: '', contenuto: '', categoria: '', tags: [], pubblicato: false })
+    setFormData({ title: '', image: '', content: '', categoria: '', tags: [], pubblicato: false })
+
+    //make a post request to the api serve  and pass over the newItem object to the SetArticoli state setter
+    fetch('http://localhost:3001/posts', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then(response => {
+        setArticoli([...articoli, response]);
+      })
+
   }
+
 
   function fetchData(url = "http://localhost:3001/posts") {
     fetch(url)
@@ -227,21 +244,18 @@ function App() {
               <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                 {
                   postsData.data ?
-
-                    postsData.data.map(post => (
-                      <div className="col" key={Date.now()}>
+                    postsData.data.map((post, index) => (
+                      <div className="col" key={post.id || index}>
                         <div className="card">
                           <h3>
                             {post.title}
                           </h3>
-                          <img src={`http://localhost:3000/imgs/posts/${post.image}`} alt={post.title} />
-                          <img src={`/imgs/posts/${post.image}`} alt={post.title} />
-                          <img src={`/imgs/posts/${post.image}`} alt={post.title} />
+                          <img src={'http://localhost:3001/' + post.image} alt={post.title} />
                         </div>
                         {post.content}
                       </div>
                     )) :
-                    <p>no data found</p>
+                    <p>No data found</p>
                 }
               </div>
             </div>
